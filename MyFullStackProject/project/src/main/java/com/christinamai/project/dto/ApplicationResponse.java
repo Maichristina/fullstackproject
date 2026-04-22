@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -17,4 +18,11 @@ public class ApplicationResponse {
     private String applicantUsername;
     private Application.Status status;
     private LocalDateTime appliedDate;
+
+    // ← NEW FIELDS
+    private String firstName;
+    private String lastName;
+    private String birthDate;
+    private List<String> education;
+    private List<String> experience;
 }

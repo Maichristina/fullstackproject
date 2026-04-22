@@ -20,9 +20,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
-@Configuration  // indicates that a class contains @Bean definition methods
-@EnableWebSecurity //etc public urls
-@EnableMethodSecurity //Without it anyone accesses everything
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Autowired
@@ -43,28 +43,29 @@ public class SecurityConfig {
                     return corsConfig;
                 }))
                 .authorizeHttpRequests(auth -> auth
+                        // Public endpoints — no token needed
                         .requestMatchers(
                                 "/api/auth/register",
                                 "/api/auth/login",
                                 "/api/auth/**",
-                                "/api/applications/**",  // ← add this
-                                "/api/jobs/**",          // ← add this
-                                "/api/users/**",         // ← add this
-
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
                                 "/v3/api-docs",
                                 "/webjars/**"
                         ).permitAll()
-                        .requestMatchers("/api/applications/my-applications").hasAuthority("ROLE_USER")
-                        .requestMatchers("/api/applications/**").hasAuthority("ROLE_USER")
+
+                        // User endpoints
+                        .requestMatchers("/api/applications/my").hasAuthority("ROLE_USER")
+                        .requestMatchers("/api/applications/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers("/api/jobs/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
+                        // Admin endpoints
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
-                        .anyRequest().authenticated()
-                        .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/users/**").hasAuthority("ROLE_ADMIN")
+
+                        // Everything else requires login
+                        .anyRequest().authenticated()   // ← MUST be last, only once
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -78,18 +79,18 @@ public class SecurityConfig {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService); //Για να ξέρει πώς να βρίσκει τους χρήστες στη βάση
-        provider.setPasswordEncoder(passwordEncoder()); //Για να ξέρει πώς να συγκρίνει τους κρυπτογραφημένους κωδικούς
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    } //Επιστρέφει το BCryptPasswordEncoder
+    }
 
     @Bean
-    public AuthenticationManager authenticationManager( //για να ξεκινήσεις τη διαδικασία του Login
+    public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }

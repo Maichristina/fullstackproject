@@ -49,6 +49,11 @@ public class ApplicationService {
         application.setJob(job); // connect to the job
         application.setUser(user); // connect to the user
         application.setStatus(Application.Status.PENDING); //starts as PENDING always
+        application.setFirstName(request.getFirstName());
+        application.setLastName(request.getLastName());
+        application.setBirthDate(request.getBirthDate());
+        application.setEducation(request.getEducation());
+        application.setExperience(request.getExperience());
 
         Application saved = applicationRepository.save(application);
         logger.info("User {} applied to job {}", username, job.getTitle());
@@ -126,7 +131,12 @@ public class ApplicationService {
                 application.getJob().getTitle(),
                 application.getUser().getUsername(),
                 application.getStatus(),
-                application.getAppliedDate()
+                application.getAppliedDate(),
+                application.getFirstName(),
+                application.getLastName(),
+                application.getBirthDate(),
+                application.getEducation(),
+                application.getExperience()
         );
     }
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 import java.time.LocalDateTime;
 
@@ -18,12 +19,12 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY) //Many applications can belong to one job
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id", nullable = false)
     private Job job;
 
-    @ManyToOne(fetch = FetchType.LAZY) //Many applications can belong to one user
-    @JoinColumn(name = "user_id", nullable = false) //Creates a user_id foreign key column pointing to users.id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Enumerated(EnumType.STRING)
@@ -32,6 +33,21 @@ public class Application {
 
     @Column(nullable = false)
     private LocalDateTime appliedDate = LocalDateTime.now();
+
+    // ← NEW FIELDS
+    private String firstName;
+    private String lastName;
+    private String birthDate;
+
+    @ElementCollection
+    @CollectionTable(name = "application_education", joinColumns = @JoinColumn(name = "application_id"))
+    @Column(name = "education")
+    private List<String> education;
+
+    @ElementCollection
+    @CollectionTable(name = "application_experience", joinColumns = @JoinColumn(name = "application_id"))
+    @Column(name = "experience")
+    private List<String> experience;
 
     public enum Status {
         PENDING,

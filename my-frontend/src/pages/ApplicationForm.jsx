@@ -33,13 +33,39 @@ function ApplicationForm() {
     setFormData({ ...formData, [field]: list });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Εδώ στέλνεις τα δεδομένα στο Backend
-    console.log("Submit to Job ID:", jobId, formData);
-    // Μετά το επιτυχές submit:
-    navigate("/jobs");
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const res = await fetch("http://localhost:8080/api/applications", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`   // ← send JWT
+      },
+      body: JSON.stringify({
+        jobId:      parseInt(jobId),          // ← from useParams
+        firstName:  formData.firstName,
+        lastName:   formData.lastName,
+        birthDate:  formData.birthDate,
+        education:  formData.education.filter(e => e.trim() !== ""),   // remove empty
+        experience: formData.experience.filter(e => e.trim() !== "")   // remove empty
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => null);
+      alert(err?.message || "Failed to submit application!");
+      return;
+    }
+
+    alert("Application submitted successfully!");
+    navigate("/my-applications");
+
+  } catch {
+    alert("Could not connect to server!");
+  }
+};
 
   return (
     <div className="app-wrapper">

@@ -46,14 +46,7 @@ public class ApplicationController {
                 applicationService.applyToJob(request, authentication.getName()));
     }
 
-    // GET /api/applications/my — user sees their own applications
-    @GetMapping("/my")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
-    public ResponseEntity<List<ApplicationResponse>> getMyApplications(
-            Authentication authentication) {
-        return ResponseEntity.ok(
-                applicationService.getMyApplications(authentication.getName()));
-    }
+
 
     // DELETE /api/applications/{id} — user deletes their own application
     @DeleteMapping("/{id}")
@@ -71,14 +64,10 @@ public class ApplicationController {
     public ResponseEntity<List<ApplicationResponse>> getAllApplications() {
         return ResponseEntity.ok(applicationService.getAllApplications());
     }
-    @GetMapping("/my-applications")
-    public ResponseEntity<List<Application>> getMyApplications(Principal principal) {
-        // Το principal.getName() μας δίνει το username του συνδεδεμένου χρήστη
+    @GetMapping("/my")
+    public ResponseEntity<List<ApplicationResponse>> getMyApplications(Principal principal) {
         String username = principal.getName();
-
-        // Καλείς το service για να βρει τις αιτήσεις βάσει username
-        List<Application> myApps = applicationService.getApplicationsByUsername(username);
-
+        List<ApplicationResponse> myApps = applicationService.getMyApplications(username);
         return ResponseEntity.ok(myApps);
     }
 

@@ -1,11 +1,13 @@
 import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
+import { useAuth } from "../context/AuthContext"  // ← import
 
 function Login() {
-  const [email, setEmail] = useState("")  
+  const [email,    setEmail]    = useState("")
   const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
+  const [error,    setError]    = useState("")
   const navigate = useNavigate()
+  const { login } = useAuth()  // ← get login function
 
   const handleLogin = async () => {
     try {
@@ -15,21 +17,17 @@ function Login() {
         body: JSON.stringify({ email, password })
       })
 
-        if (!res.ok) {
+      if (!res.ok) {
         const data = await res.json().catch(() => null)
         setError(data?.message || "Wrong email or password!")
         return
       }
 
-   
-
       const data = await res.json()
-      localStorage.setItem("token",    data.token)
-      localStorage.setItem("username", data.username)  // ← save these too
-      localStorage.setItem("role",     data.role)
+      login(data.token, data.role, data.username)  // ← use this instead of localStorage directly
       navigate("/jobs")
 
-    } catch  {
+    } catch {
       setError("Could not connect to server!")
     }
   }
@@ -40,8 +38,8 @@ function Login() {
         <h2>Login</h2>
         {error && <p className="error">{error}</p>}
         <input
-          placeholder="email"
-          type="email" 
+          placeholder="Email"
+          type="email"
           value={email}
           onChange={e => setEmail(e.target.value)}
           autoFocus
