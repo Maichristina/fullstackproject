@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 
 function Login() {
-  const [username, setUsername] = useState("")  
+  const [email, setEmail] = useState("")  
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const navigate = useNavigate()
@@ -12,12 +12,12 @@ function Login() {
       const res = await fetch("http://localhost:8080/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ email, password })
       })
 
         if (!res.ok) {
         const data = await res.json().catch(() => null)
-        setError(data?.message || "Wrong username or password!")
+        setError(data?.message || "Wrong email or password!")
         return
       }
 
@@ -40,9 +40,11 @@ function Login() {
         <h2>Login</h2>
         {error && <p className="error">{error}</p>}
         <input
-          placeholder="Username"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
+          placeholder="email"
+          type="email" 
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          autoFocus
         />
         <input
           placeholder="Password"

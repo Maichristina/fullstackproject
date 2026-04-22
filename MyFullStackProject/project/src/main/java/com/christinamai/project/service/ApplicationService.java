@@ -61,7 +61,7 @@ public class ApplicationService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return applicationRepository.findByUser(user)
+        return applicationRepository.findByUser_Username(username)
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -112,6 +112,11 @@ public class ApplicationService {
         logger.info("Admin {} updated application {} status to {}", username, id, status);
 
         return mapToResponse(updated);
+    }
+
+    public List<Application> getApplicationsByUsername(String username) {
+        // Τώρα το όνομα της μεθόδου ταιριάζει με την παράμετρο (String)
+        return applicationRepository.findByUser_Username(username);
     }
 
     // Converts Application entity → ApplicationResponse DTO

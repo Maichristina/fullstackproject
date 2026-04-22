@@ -1,14 +1,15 @@
 package com.christinamai.project.dto;
-
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class LoginRequest {
 
-    @NotBlank(message = "Username is required")
-    private String username;
+    @NotBlank
+    @Email                        // ← validate email format
+    private String email;         // ← was username
 
-    @NotBlank(message = "Password is required")
+    @NotBlank
     private String password;
 }

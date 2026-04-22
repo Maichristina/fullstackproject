@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
 
-    List<Application> findByUser(User user); //list-->return 0-many results
+    List<Application> findByUser_Username(String username); //list-->return 0-many results
 
     List<Application> findByJob(Job job);
 

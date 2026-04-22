@@ -92,23 +92,21 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
 
+        // Find user by EMAIL first
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Email not found"));
+
         // This triggers Spring Security to verify username + password
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
+                        user.getUsername(),
                         request.getPassword()
                 )
         );
 
-        // If we reach here, credentials are correct
-        // Get the username from the authenticated object
-        String username = authentication.getName();
 
-        // Load user to get their role
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        logger.info("User logged in: {}", username);
+        logger.info("User logged in: {}", user.getUsername());
 
         // Generate and return the token
         String token = jwtUtils.generateToken(

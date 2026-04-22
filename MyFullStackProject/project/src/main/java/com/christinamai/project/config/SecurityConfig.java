@@ -50,12 +50,19 @@ public class SecurityConfig {
                                 "/api/applications/**",  // ← add this
                                 "/api/jobs/**",          // ← add this
                                 "/api/users/**",         // ← add this
+
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
                                 "/v3/api-docs",
                                 "/webjars/**"
                         ).permitAll()
+                        .requestMatchers("/api/applications/my-applications").hasAuthority("ROLE_USER")
+                        .requestMatchers("/api/applications/**").hasAuthority("ROLE_USER")
+                        .requestMatchers("/api/jobs/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
+                        .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+                        .anyRequest().authenticated()
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )

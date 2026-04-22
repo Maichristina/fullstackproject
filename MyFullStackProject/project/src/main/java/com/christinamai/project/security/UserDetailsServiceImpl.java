@@ -47,6 +47,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                             "User not found with username: " + username);
                 });
 
+        // If not found → try by EMAIL
+        if (user == null) {
+            user = userRepository.findByEmail(username)
+                    .orElseThrow(() -> {
+                        logger.error("User not found: {}", username);
+                        return new UsernameNotFoundException(
+                                "User not found: " + username);
+                    });
+        }
+
         logger.info("User loaded successfully: {}", username);
 
         // Step 2: Convert our User entity into a Spring Security UserDetails object

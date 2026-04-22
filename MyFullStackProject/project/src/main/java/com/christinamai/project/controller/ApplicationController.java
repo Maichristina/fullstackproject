@@ -9,6 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import com.christinamai.project.entity.Application; // Βεβαιώσου ότι το path είναι σωστό
+import java.security.Principal;
+import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
@@ -66,6 +70,16 @@ public class ApplicationController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<ApplicationResponse>> getAllApplications() {
         return ResponseEntity.ok(applicationService.getAllApplications());
+    }
+    @GetMapping("/my-applications")
+    public ResponseEntity<List<Application>> getMyApplications(Principal principal) {
+        // Το principal.getName() μας δίνει το username του συνδεδεμένου χρήστη
+        String username = principal.getName();
+
+        // Καλείς το service για να βρει τις αιτήσεις βάσει username
+        List<Application> myApps = applicationService.getApplicationsByUsername(username);
+
+        return ResponseEntity.ok(myApps);
     }
 
     // GET /api/applications/job/{jobId} — admin sees applications for a job
