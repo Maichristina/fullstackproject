@@ -10,12 +10,15 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar" />
         </processorPath>
-        <module name="project" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Dockerfile" target="21" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Dockerfile" options="-parameters" />
       <module name="project" options="-parameters" />
     </option>
   </component>
