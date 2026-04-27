@@ -1,114 +1,64 @@
-import { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { 
-  FaUserCircle, FaBriefcase, FaFileAlt, 
-  FaSignOutAlt, FaBookmark, FaPlus, FaChevronDown, FaChevronUp
-} from 'react-icons/fa';
-import '../App.css';
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "../context/AuthContext"
+import { FaPlus } from "react-icons/fa"
+import Navbar from "../components/Navbar"
+import "../App.css"
+
 
 function Jobs() {
-  const [view, setView]           = useState("home");
-  const [jobs, setJobs]           = useState([]);
-  const [error, setError]         = useState("");
-  const [success, setSuccess]     = useState("");
-  const [applying, setApplying]   = useState(null);
-  const [menuOpen, setMenuOpen]   = useState(false);
-  const [savedJobs, setSavedJobs] = useState(() => {
-    const localData = localStorage.getItem("savedJobs");
-    return localData ? JSON.parse(localData) : [];
-  });
+  const [view,    setView]    = useState("home")
+  const [jobs,    setJobs]    = useState([])
+  const [error,   setError]   = useState("")
+  const [success, setSuccess] = useState("")
+  const [applying, setApplying] = useState(null)
 
-  const { token, role, logout } = useAuth();
-  const navigate = useNavigate();
+  const { token, role } = useAuth()
+  const navigate = useNavigate()
 
-  useEffect(() => { fetchJobs(); }, []);
+  useEffect(() => { fetchJobs() }, [])
 
   const fetchJobs = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/jobs", {
+      const res = await fetch("/api/jobs", {
         headers: { "Authorization": `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error("Could not load jobs!");
-      const data = await res.json();
-      setJobs(data);
-    } catch (_err) {
-      setError("Could not load jobs!");
+      })
+      if (!res.ok) throw new Error()
+      const data = await res.json()
+      setJobs(data)
+    } catch {
+      setError("Could not load jobs!")
     }
-  };
+  }
 
-
-
-  const handleSaveJob = (job) => {
-    const updated = savedJobs.some(j => j.id === job.id)
-      ? savedJobs.filter(j => j.id !== job.id)
-      : [...savedJobs, job];
-    setSavedJobs(updated);
-    localStorage.setItem("savedJobs", JSON.stringify(updated));
-  };
-
-  const handleLogout = () => { logout(); navigate("/login"); };
-
-  // Menu items based on role
-  const menuItems = role === "ROLE_ADMIN"
-    ? [
-        { label: "Browse Jobs",    icon: <FaBriefcase />, action: () => { setView("jobs");  setMenuOpen(false); } },
-        { label: "Manage Jobs",    icon: <FaPlus />,      action: () => { navigate("/admin/jobs");         setMenuOpen(false); } },
-        { label: "Applications",   icon: <FaFileAlt />,   action: () => { navigate("/admin/applications"); setMenuOpen(false); } },
-      ]
-    : [
-        { label: "Browse Jobs",       icon: <FaBriefcase />, action: () => { setView("jobs");               setMenuOpen(false); } },
-        { label: "My Applications",   icon: <FaFileAlt />,   action: () => { navigate("/my-applications");  setMenuOpen(false); } },
-        { label: "Saved Jobs",        icon: <FaBookmark />,  action: () => { navigate("/saved-jobs");        setMenuOpen(false); } },
-      ];
+  const handleApply = async (jobId) => {
+    setApplying(jobId)
+    setError("")
+    try {
+      const res = await fetch("/api/applications", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ jobId })
+      })
+      if (!res.ok) throw new Error()
+      setSuccess("Applied successfully!")
+      setTimeout(() => setSuccess(""), 3000)
+    } catch {
+      setError("Could not apply. Try again!")
+    } finally {
+      setApplying(null)
+    }
+  }
 
   return (
     <div className="app-wrapper">
 
-      {/* ── HEADER ───────────────────────────────── */}
-      <header className="main-header">
+      {/* Navbar is now separate */}
+      <Navbar />
 
-        {/* Logo */}
-        <div className="logo" onClick={() => { setView("home"); setMenuOpen(false); }}>
-          Career<span>Stream</span>
-        </div>
-
-        {/* Menu Button — sits below logo */}
-        <div className="menu-section">
-          <button
-            className="menu-dropdown-btn"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            Menu {menuOpen ? <FaChevronUp size={12}/> : <FaChevronDown size={12}/>}
-          </button>
-
-          {/* Dropdown */}
-          {menuOpen && (
-            <div className="dropdown-menu">
-              {menuItems.map((item, i) => (
-                <button key={i} className="dropdown-item" onClick={item.action}>
-                  <span className="dropdown-icon">{item.icon}</span>
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Right side — user info + logout */}
-        <div className="header-right">
-          <span className="role-badge">
-            {role === "ROLE_ADMIN" ? "Admin" : "User"}
-          </span>
-          <FaUserCircle size={26} color="#4a90e2" />
-          <button className="icon-btn" onClick={handleLogout} title="Logout">
-            <FaSignOutAlt size={20} />
-          </button>
-        </div>
-
-      </header>
-
-      {/* ── MAIN CONTENT ─────────────────────────── */}
       <main className="main-content">
 
         {/* HOME VIEW */}
@@ -116,6 +66,12 @@ function Jobs() {
           <div className="welcome-view">
             <h1>Welcome to CareerStream</h1>
             <p>Click <strong>Menu</strong> to browse available jobs.</p>
+            <button
+              className="create-btn"
+              onClick={() => setView("jobs")}
+            >
+              Browse Jobs
+            </button>
           </div>
         )}
 
@@ -134,8 +90,10 @@ function Jobs() {
               <div className="no-data-view">
                 <p>📋 No jobs available right now.</p>
                 {role === "ROLE_ADMIN" && (
-                  <button className="create-btn"
-                    onClick={() => navigate("/admin/jobs")}>
+                  <button
+                    className="create-btn"
+                    onClick={() => navigate("/admin/jobs")}
+                  >
                     <FaPlus /> Create First Job
                   </button>
                 )}
@@ -144,16 +102,6 @@ function Jobs() {
               <div className="jobs-grid">
                 {jobs.map(job => (
                   <div className="job-card-glass" key={job.id}>
-
-                    {/* Save button — USER only */}
-                    {role === "ROLE_USER" && (
-                      <button 
-                        className="apply-btn-modern" 
-                        onClick={() => navigate(`/apply/${job.id}`)}
-                      >
-                        View & Apply
-                      </button>
-                    )}
 
                     <div className="card-header">
                       <span className="badge-location">
@@ -172,7 +120,16 @@ function Jobs() {
                         </span>
                       </div>
 
-                    
+                      {/* Apply button — USER only */}
+                      {role !== "ROLE_ADMIN" && (
+                        <button
+                          className="apply-btn-modern"
+                          onClick={() => navigate(`/apply/${job.id}`)}
+                          disabled={applying === job.id}
+                        >
+                          {applying === job.id ? "Applying..." : "View & Apply"}
+                        </button>
+                      )}
                     </div>
 
                   </div>
@@ -184,7 +141,7 @@ function Jobs() {
 
       </main>
     </div>
-  );
+  )
 }
 
-export default Jobs;
+export default Jobs

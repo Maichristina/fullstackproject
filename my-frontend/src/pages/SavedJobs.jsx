@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { FaBookmark, FaTrash } from "react-icons/fa"
+import Navbar from "../components/Navbar"
+import { useAuth } from "../context/AuthContext"
 
 function SavedJobs() {
   const [savedJobs, setSavedJobs] = useState([])
@@ -8,7 +10,7 @@ function SavedJobs() {
   const [success,   setSuccess]   = useState("")
   const [error,     setError]     = useState("")
   const navigate = useNavigate()
-  const token = localStorage.getItem("token")
+  const { token } = useAuth()
 
   // Load saved jobs from localStorage when page opens
   useEffect(() => {
@@ -28,7 +30,7 @@ function SavedJobs() {
     setApplying(jobId)
     setError("")
     try {
-      const res = await fetch("http://localhost:8080/api/applications", {
+      const res = await fetch("/api/applications", {
         method: "POST",
         headers: {
           "Content-Type":  "application/json",

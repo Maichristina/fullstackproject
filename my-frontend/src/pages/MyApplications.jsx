@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { FaCalendarAlt, FaTrash } from "react-icons/fa"
+import Navbar from "../components/Navbar"
 
 function MyApplications() {
   const [applications, setApplications] = useState([])
@@ -15,7 +16,7 @@ function MyApplications() {
   const fetchMyApplications = async () => {
     try {
       // ✅ CORRECT URL: /api/applications/my
-      const res = await fetch("http://localhost:8080/api/applications/my", {
+      const res = await fetch("/api/applications/my", {
         headers: { "Authorization": `Bearer ${token}` }
       })
       if (!res.ok) throw new Error()
@@ -31,7 +32,7 @@ function MyApplications() {
   const handleDelete = async (id) => {
     if (!window.confirm("Withdraw this application?")) return
     try {
-      const res = await fetch(`http://localhost:8080/api/applications/${id}`, {
+      const res = await fetch(`/api/applications/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       })

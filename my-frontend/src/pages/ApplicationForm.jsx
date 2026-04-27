@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { FaPlus, FaTrash } from 'react-icons/fa';
+import Navbar from "../components/Navbar";
 
 function ApplicationForm() {
   const { jobId } = useParams();
@@ -37,7 +38,7 @@ const handleSubmit = async (e) => {
   e.preventDefault();
 
   try {
-    const res = await fetch("http://localhost:8080/api/applications", {
+    const res = await fetch("/api/applications", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

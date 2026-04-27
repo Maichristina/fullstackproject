@@ -1,16 +1,17 @@
-# Χρησιμοποιούμε Node για το χτίσιμο
-FROM node:20-alpine
+FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Αντιγραφή αρχείων ρυθμίσεων
-COPY package*.json ./
-RUN npm install
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
 
-# Αντιγραφή όλου του κώδικα
-COPY . .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Άνοιγμα της θύρας που χρησιμοποιεί το Vite (συνήθως 5173 ή 3000)
-EXPOSE 5173
+# Search EVERYWHERE for jar files
+RUN find / -name "*.jar" -type f 2>/dev/null | grep -v repository
 
-# Εκκίνηση της εφαρμογής
-CMD ["npm", "run", "dev", "--", "--host"]
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
