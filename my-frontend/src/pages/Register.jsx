@@ -24,9 +24,9 @@ function Register() {
 
     try {
       const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password })  // ← fixed!
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email, password })  // ← fixed!
       })
 
       if (!res.ok) {
@@ -34,6 +34,9 @@ function Register() {
         setError(data?.message || "Registration failed. Try again!")
         return
       }
+
+      alert("Success! Please login.")
+      navigate("/login")
 
       const data = await res.json()
       // Save token — user is logged in immediately after register!

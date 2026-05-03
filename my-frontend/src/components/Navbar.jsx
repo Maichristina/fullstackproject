@@ -34,13 +34,14 @@ function Navbar() {
         { label: "Browse Jobs",     icon: <FaBriefcase />, path: "/jobs" },
         { label: "My Applications", icon: <FaFileAlt />,   path: "/my-applications" },
         { label: "Saved Jobs",      icon: <FaBookmark />,  path: "/saved-jobs" },
+        { label: "My Profile",      icon: <FaUserCircle />,  path: "/profile" }
       ]
 
   return (
     <header className="main-header">
 
       {/* Logo */}
-      <div className="logo" onClick={() => navigate("/jobs")}>
+      <div className="logo" onClick={() => navigate("/")}>
         Career<span>Stream</span>
       </div>
 

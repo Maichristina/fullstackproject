@@ -63,18 +63,16 @@ function MyApplications() {
     <div className="app-wrapper">
 
       {/* Header */}
-      <header className="main-header">
-        <div className="logo" onClick={() => navigate("/jobs")}>
-          Career<span>Stream</span>
-        </div>
-        <button className="menu-dropdown-btn" onClick={() => navigate("/jobs")}>
-          ← Back to Jobs
-        </button>
-      </header>
-
       <main className="main-content">
-
-        <div className="section-title">
+        <div className="back-navigation">
+          {/* Αν θέλεις το "Back to Jobs", μπορείς να το βάλεις εδώ σαν απλό link/button */}
+          <button
+            className="menu-dropdown-btn"
+            onClick={() => navigate("/jobs")}
+            style={{ marginLeft: "1rem" }}>
+            ← Back to Jobs
+          </button>
+          
           <h2>My Applications</h2>
           <p>Track the status of your job applications</p>
         </div>

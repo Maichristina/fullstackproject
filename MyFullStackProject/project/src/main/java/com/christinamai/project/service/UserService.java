@@ -56,15 +56,15 @@ public class UserService {
     }
 
     // USER — get their own profile
-    public User getMyProfile(String username) {
-        return userRepository.findByUsername(username)
+    public User getMyProfile(String email) {
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     // USER — update their own profile
-    public User updateMyProfile(String username, RegisterRequest request) {
+    public User updateMyProfile(String email, RegisterRequest request) {
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // Check if new username is taken by someone else
@@ -88,7 +88,7 @@ public class UserService {
         }
 
         User updated = userRepository.save(user);
-        logger.info("User {} updated their profile", username);
+        logger.info("User {} updated their profile", email);
 
         return updated;
     }

@@ -34,7 +34,7 @@ public class ApplicationService {
     // USER — apply to a job
     public ApplicationResponse applyToJob(ApplicationRequest request, String username) {
         //Find the User in DB by username not found? → throw exception → 404 error
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Job job = jobRepository.findById(request.getJobId())
@@ -62,11 +62,11 @@ public class ApplicationService {
     }
 
     // USER — get their own applications
-    public List<ApplicationResponse> getMyApplications(String username) {
-        User user = userRepository.findByUsername(username)
+    public List<ApplicationResponse> getMyApplications(String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return applicationRepository.findByUser_Username(username)
+        return applicationRepository.findByUser_Email(email)
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -74,17 +74,17 @@ public class ApplicationService {
 
     // USER — delete their own application.Πριν διαγράψει, ελέγχει αν το username της αίτησης ταιριάζει με το username αυτού που ζητάει τη διαγραφή.
     // Έτσι, ο Χρήστης Α δεν μπορεί να διαγράψει την αίτηση του Χρήστη Β
-    public void deleteMyApplication(Long id, String username) {
+    public void deleteMyApplication(Long id, String email) {
         Application application = applicationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Application not found"));
 
         // Make sure the application belongs to this user
-        if (!application.getUser().getUsername().equals(username)) {
+        if (!application.getUser().getEmail().equals(email)) {
             throw new RuntimeException("You can only delete your own applications");
         }
 
         applicationRepository.delete(application);
-        logger.info("User {} deleted application id={}", username, id);
+        logger.info("User {} deleted application id={}", email, id);
     }
 
     // ADMIN — get all applications
@@ -121,7 +121,7 @@ public class ApplicationService {
 
     public List<Application> getApplicationsByUsername(String username) {
         // Τώρα το όνομα της μεθόδου ταιριάζει με την παράμετρο (String)
-        return applicationRepository.findByUser_Username(username);
+        return applicationRepository.findByUser_Email(username);
     }
 
     // Converts Application entity → ApplicationResponse DTO

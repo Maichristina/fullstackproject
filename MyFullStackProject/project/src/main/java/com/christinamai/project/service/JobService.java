@@ -27,8 +27,8 @@ public class JobService {
     private UserRepository userRepository;
 
     // ADMIN — create a new job
-    public JobResponse createJob(JobRequest request, String username) {
-        User admin = userRepository.findByUsername(username)
+    public JobResponse createJob(JobRequest request, String email) {
+        User admin = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Job job = new Job();
@@ -39,7 +39,7 @@ public class JobService {
         job.setPostedBy(admin);
 
         Job saved = jobRepository.save(job);
-        logger.info("Job created: {} by {}", saved.getTitle(), username);
+        logger.info("Job created: {} by {}", saved.getTitle(), email);
 
         return mapToResponse(saved);
     }
@@ -85,8 +85,8 @@ public class JobService {
     }
 
     // ADMIN — get jobs posted by a specific admin
-    public List<JobResponse> getJobsByAdmin(String username) {
-        User admin = userRepository.findByUsername(username)
+    public List<JobResponse> getJobsByAdmin(String email) {
+        User admin = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return jobRepository.findByPostedBy(admin)

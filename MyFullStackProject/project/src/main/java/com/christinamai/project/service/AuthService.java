@@ -16,6 +16,9 @@
 package com.christinamai.project.service;
 
 import com.christinamai.project.dto.AuthResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.server.ResponseStatusException;
 import com.christinamai.project.dto.LoginRequest;
 import com.christinamai.project.dto.RegisterRequest;
 import com.christinamai.project.entity.User;
@@ -77,48 +80,40 @@ public class AuthService {
 
         // Generate token immediately so user is logged in after register
         String token = jwtUtils.generateToken(
-                user.getUsername(),
+                user.getEmail(),
                 user.getRole().name()
+
+
+
         );
 
         //Return everything the frontend needs
         return new AuthResponse(
                 token,
-                user.getUsername(),
+                user.getEmail(),
                 user.getRole().name(),
+
+
                 "Registration successful"
         );
     }
 
     public AuthResponse login(LoginRequest request) {
-
-        // Find user by EMAIL first
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Email not found"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED, "Invalid credentials"  // ← 401, not RuntimeException
+                ));
 
-        // This triggers Spring Security to verify username + password
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        user.getUsername(),
-                        request.getPassword()
-                )
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+        } catch (BadCredentialsException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+        }
 
-
-
-        logger.info("User logged in: {}", user.getUsername());
-
-        // Generate and return the token
-        String token = jwtUtils.generateToken(
-                user.getUsername(),
-                user.getRole().name()
-        );
-
+        String token = jwtUtils.generateToken(user.getEmail(),user.getRole().name() );
         return new AuthResponse(
-                token,
-                user.getUsername(),
-                user.getRole().name(),
-                "Login successful"
-        );
+                token, user.getEmail(),user.getRole().name(),  "Login successful");
     }
 }

@@ -20,13 +20,26 @@ function Login() {
 
       if (!res.ok) {
         const data = await res.json().catch(() => null)
+        console.log("Status:", res.status, "Body:", data)
         setError(data?.message || "Wrong email or password!")
         return
       }
 
       const data = await res.json()
+      console.log("Full data:", JSON.stringify(data))
+      console.log("ROLE FROM BACK:", data.role) 
+      console.log("token:",    data.token)
+      console.log("role:",     data.role)
+      console.log("username:", data.username)
+      console.log("full response:", data)
+
       login(data.token, data.role, data.username)  // ← use this instead of localStorage directly
-      navigate("/jobs")
+      if (data.role === "ROLE_ADMIN") {
+        navigate("/admin")
+      } else {
+        navigate("/jobs")
+      }
+      
 
     } catch {
       setError("Could not connect to server!")

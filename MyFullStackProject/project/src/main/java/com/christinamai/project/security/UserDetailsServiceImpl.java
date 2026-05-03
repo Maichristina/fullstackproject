@@ -31,40 +31,25 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired  //Needs UserRepository to search the databas
     private UserRepository userRepository;
 
+
+
     @Override
-    //Όταν κάποιος πάει να κάνει login, το Spring Security του δίνει ένα username.
-    //userRepository.findByUsername(username): Πηγαίνει στη βάση δεδομένων και ψάχνει αν υπάρχει αυτός ο χρήστης
-    //orElseThrow: Αν δεν τον βρει, "πετάει" μια εξαίρεση UsernameNotFoundException. Πριν την πετάξει, ο Logger καταγράφει το σφάλμα (logger.error)
-    // για να ξέρεις εσύ ότι κάποιος προσπάθησε να μπει με ανύπαρκτο όνομα.
-    public UserDetails loadUserByUsername(String username)
+    public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
 
-        // Step 1: Search the database for the user
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> {
-                    logger.error("User not found with username: {}", username);
+                    logger.error("User not found with email: {}", email);
                     return new UsernameNotFoundException(
-                            "User not found with username: " + username);
+                            "User not found with email: " + email);
                 });
 
-        // If not found → try by EMAIL
-        if (user == null) {
-            user = userRepository.findByEmail(username)
-                    .orElseThrow(() -> {
-                        logger.error("User not found: {}", username);
-                        return new UsernameNotFoundException(
-                                "User not found: " + username);
-                    });
-        }
+        logger.info("User loaded successfully: {}", email);
 
-        logger.info("User loaded successfully: {}", username);
-
-        // Step 2: Convert our User entity into a Spring Security UserDetails object
-        //Αν ο χρήστης βρεθεί Δίνουμε το όνομα. Δίνουμε το κρυπτογραφημένο password Εδώ μετατρέπουμε το Role που έχεις στη βάση (π.χ. ADMIN) σε "Δικαίωμα" (Authority)
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
+                user.getEmail(),
                 user.getPassword(),
-                List.of(new SimpleGrantedAuthority(user.getRole().name()))  //role->enum  .name->make string
+                List.of(new SimpleGrantedAuthority(user.getRole().name()))
         );
     }
 }

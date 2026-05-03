@@ -39,7 +39,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    // GET /api/users/{id} — admin gets any user by id
+    // GET /api/users/σ{id} — admin gets any user by id
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {

@@ -80,7 +80,7 @@ class ApplicationServiceTest {
     // ─────────────────────────────────────────────
     @Test
     void applyToJob_Success() {
-        when(userRepository.findByUsername("john"))
+        when(userRepository.findByEmail("john@test.com"))
                 .thenReturn(Optional.of(testUser));
         when(jobRepository.findById(1L))
                 .thenReturn(Optional.of(testJob));
@@ -90,7 +90,7 @@ class ApplicationServiceTest {
                 .thenReturn(testApplication);
 
         ApplicationResponse result =
-                applicationService.applyToJob(applicationRequest, "john");
+                applicationService.applyToJob(applicationRequest, "john@test.com");
 
         assertNotNull(result);
         assertEquals("Java Developer",           result.getJobTitle());
@@ -104,7 +104,7 @@ class ApplicationServiceTest {
     // ─────────────────────────────────────────────
     @Test
     void applyToJob_AlreadyApplied_ThrowsException() {
-        when(userRepository.findByUsername("john"))
+        when(userRepository.findByEmail("john@test.com"))
                 .thenReturn(Optional.of(testUser));
         when(jobRepository.findById(1L))
                 .thenReturn(Optional.of(testJob));
@@ -112,7 +112,7 @@ class ApplicationServiceTest {
                 .thenReturn(true);
 
         RuntimeException ex = assertThrows(RuntimeException.class,
-                () -> applicationService.applyToJob(applicationRequest, "john"));
+                () -> applicationService.applyToJob(applicationRequest, "john@test.com"));
 
         assertEquals("You have already applied to this job", ex.getMessage());
         verify(applicationRepository, never()).save(any());
@@ -123,13 +123,13 @@ class ApplicationServiceTest {
     // ─────────────────────────────────────────────
     @Test
     void applyToJob_JobNotFound_ThrowsException() {
-        when(userRepository.findByUsername("john"))
+        when(userRepository.findByEmail("john@test.com"))
                 .thenReturn(Optional.of(testUser));
         when(jobRepository.findById(1L))
                 .thenReturn(Optional.empty());
 
         RuntimeException ex = assertThrows(RuntimeException.class,
-                () -> applicationService.applyToJob(applicationRequest, "john"));
+                () -> applicationService.applyToJob(applicationRequest, "john@test.com"));
 
         assertEquals("Job not found", ex.getMessage());
     }
@@ -139,11 +139,11 @@ class ApplicationServiceTest {
     // ─────────────────────────────────────────────
     @Test
     void applyToJob_UserNotFound_ThrowsException() {
-        when(userRepository.findByUsername("unknown"))
+        when(userRepository.findByEmail("unknown@test.com"))
                 .thenReturn(Optional.empty());
 
         RuntimeException ex = assertThrows(RuntimeException.class,
-                () -> applicationService.applyToJob(applicationRequest, "unknown"));
+                () -> applicationService.applyToJob(applicationRequest, "unknown@test.com"));
 
         assertEquals("User not found", ex.getMessage());
     }
@@ -154,13 +154,13 @@ class ApplicationServiceTest {
     // ─────────────────────────────────────────────
     @Test
     void getMyApplications_ReturnsUserApplications() {
-        when(userRepository.findByUsername("john"))
+        when(userRepository.findByEmail("john@test.com"))
                 .thenReturn(Optional.of(testUser));
-        when(applicationRepository.findByUser_Username("john"))
+        when(applicationRepository.findByUser_Email("john@test.com"))
                 .thenReturn(List.of(testApplication));
 
         List<ApplicationResponse> result =
-                applicationService.getMyApplications("john");
+                applicationService.getMyApplications("john@test.com");
 
         assertNotNull(result);
         assertEquals(1,                result.size());
@@ -174,13 +174,13 @@ class ApplicationServiceTest {
     // ─────────────────────────────────────────────
     @Test
     void getMyApplications_Empty() {
-        when(userRepository.findByUsername("john"))
+        when(userRepository.findByEmail("john@test.com"))
                 .thenReturn(Optional.of(testUser));
-        when(applicationRepository.findByUser_Username("john"))
+        when(applicationRepository.findByUser_Email("john@test.com"))
                 .thenReturn(List.of());
 
         List<ApplicationResponse> result =
-                applicationService.getMyApplications("john");
+                applicationService.getMyApplications("john@test.com");
 
         assertNotNull(result);
         assertEquals(0, result.size());
@@ -194,7 +194,7 @@ class ApplicationServiceTest {
         when(applicationRepository.findById(1L))
                 .thenReturn(Optional.of(testApplication));
 
-        applicationService.deleteMyApplication(1L, "john");
+        applicationService.deleteMyApplication(1L, "john@test.com");
 
         verify(applicationRepository, times(1)).delete(testApplication);
     }
@@ -208,7 +208,7 @@ class ApplicationServiceTest {
                 .thenReturn(Optional.of(testApplication));
 
         RuntimeException ex = assertThrows(RuntimeException.class,
-                () -> applicationService.deleteMyApplication(1L, "maria"));
+                () -> applicationService.deleteMyApplication(1L, "maria@test.com"));
 
         assertEquals("You can only delete your own applications",
                 ex.getMessage());
@@ -224,7 +224,7 @@ class ApplicationServiceTest {
                 .thenReturn(Optional.empty());
 
         RuntimeException ex = assertThrows(RuntimeException.class,
-                () -> applicationService.deleteMyApplication(99L, "john"));
+                () -> applicationService.deleteMyApplication(99L, "john@test.com"));
 
         assertEquals("Application not found", ex.getMessage());
         verify(applicationRepository, never()).delete(any());
@@ -270,7 +270,7 @@ class ApplicationServiceTest {
                 .thenReturn(acceptedApp);
 
         ApplicationResponse result =
-                applicationService.updateStatus(1L, "ACCEPTED", "admin");
+                applicationService.updateStatus(1L, "ACCEPTED", "admin@test.com");
 
         assertNotNull(result);
         assertEquals(Application.Status.ACCEPTED, result.getStatus());
@@ -295,7 +295,7 @@ class ApplicationServiceTest {
                 .thenReturn(rejectedApp);
 
         ApplicationResponse result =
-                applicationService.updateStatus(1L, "REJECTED", "admin");
+                applicationService.updateStatus(1L, "REJECTED", "admin@test.com");
 
         assertEquals(Application.Status.REJECTED, result.getStatus());
     }
@@ -310,6 +310,6 @@ class ApplicationServiceTest {
 
         // "BANANA" is not PENDING/ACCEPTED/REJECTED → throws!
         assertThrows(IllegalArgumentException.class,
-                () -> applicationService.updateStatus(1L, "BANANA", "admin"));
+                () -> applicationService.updateStatus(1L, "BANANA", "admin@test.com"));
     }
 }

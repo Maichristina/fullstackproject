@@ -31,24 +31,24 @@ function SavedJobs() {
     setError("")
     try {
       const res = await fetch("/api/applications", {
-        method: "POST",
-        headers: {
-          "Content-Type":  "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ jobId })
-      })
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token && { Authorization: `Bearer ${token}` })
+      },
+      body: JSON.stringify({ jobId })
+    })
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => null)
-        setError(data?.message || "Could not apply. Maybe already applied?")
-        return
-      }
+    if (!res.ok) {
+      const data = await res.json().catch(() => null)
+      setError(data?.message || "Could not apply. Maybe already applied?")
+      return
+    }
 
       // Remove from saved after applying
-      handleRemove(jobId)
-      setSuccess("Applied successfully! ✓")
-      setTimeout(() => setSuccess(""), 3000)
+    handleRemove(jobId)
+    setSuccess("Applied successfully! ✓")
+    setTimeout(() => setSuccess(""), 3000)
 
     } catch {
       setError("Could not connect to server!")
@@ -59,22 +59,16 @@ function SavedJobs() {
 
   return (
     <div className="app-wrapper">
-
-      {/* Header */}
-      <header className="main-header">
-        <div className="logo" onClick={() => navigate("/jobs")}>
-          Career<span>Stream</span>
-        </div>
-        <button
-          className="menu-dropdown-btn"
-          onClick={() => navigate("/jobs")}
-          style={{ marginLeft: "1rem" }}>
-          ← Back to Jobs
-        </button>
-      </header>
-
-      {/* Content */}
       <main className="main-content">
+        <div className="back-navigation">
+          <button
+            className="menu-dropdown-btn"
+            onClick={() => navigate("/jobs")}
+            style={{ marginLeft: "1rem" }}>
+            ← Back to Jobs
+          </button>
+        </div>
+   
         <div className="section-title">
           <h2>
             <FaBookmark color="#4a90e2" style={{ marginRight: "0.5rem" }} />
