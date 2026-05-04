@@ -35,7 +35,7 @@ public class Job {
     private LocalDateTime postedDate = LocalDateTime.now();
 
     // many appliactions 1 user
-    @ManyToOne(fetch = FetchType.LAZY) // dont load user data unless i tell you
+    @ManyToOne(fetch = FetchType.EAGER) // dont load user data unless i tell you
     @JoinColumn(name = "posted_by_id", nullable = false) //creates a column posted_by_id in the jobs table — this is the foreign key pointing to users.id
     private User postedBy;
 

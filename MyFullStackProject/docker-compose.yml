@@ -12,25 +12,30 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   backend:
-    build: ./project
+    build:
+      context: ./project       # ← folder with pom.xml
+      dockerfile: Dockerfile      # ← must be INSIDE build!
     container_name: spring_backend
     ports:
       - "8080:8080"
     environment:
-      SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/myapp
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: xristina123
+      APP_JWT_SECRET: xristinaSecretKey123456789012345678901234
+      APP_JWT_EXPIRATION: 86400000
     depends_on:
-      - db  # <--- Απλό dependency, χωρίς condition
+      - db
 
   frontend:
-    build: ../my-frontend
-    container_name: react_frontend
-    ports:
-      - "5173:5173"
-    depends_on:
-      - backend
+     build:
+       context: ../my-frontend   # ← folder with package.json
+       dockerfile: Dockerfile      # ← must be INSIDE build!
+     container_name: react_frontend
+     ports:
+       - "5173:5173"
+     depends_on:
+       - backend
 
 volumes:
   postgres_data:
