@@ -1,4 +1,4 @@
-#JOb Search Fullstack Application
+#Job Search Fullstack Application
 Fullstack job search application with a Spring Boot backend and React frontend
 
 ## Description
