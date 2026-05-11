@@ -9,20 +9,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.List;
 
-@Entity  // create a table
-@Table(name = "users") //name of table
-@Data //automatically setters getters
+@Entity
+@Table(name = "users")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
 
-    @Id //primary key
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank //not be empty
-    @Size(min = 3, max = 50) //chars between 3-50
-    @Column(unique = true, nullable = false) //no 2 users with same username,no null
+    @NotBlank
+    @Size(min = 3, max = 50)
+    @Column(unique = true, nullable = false)
     private String username;
 
     @NotBlank
@@ -35,7 +35,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)  // saves the word "ROLE_ADMIN" in the DB, not a number. Spring Security will use this to decide who can access what.
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 

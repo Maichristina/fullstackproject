@@ -112,7 +112,7 @@ function AdminApplications() {
               {filtered.map(app => (
                 <tr key={app.id}>
                   <td>
-                    {/* ✅ FIXED: applicantUsername not candidateName */}
+                   
                     <strong>{app.applicantUsername}</strong>
                   </td>
                   <td>{app.jobTitle}</td>

@@ -7,8 +7,8 @@ import lombok.Data;
 public class LoginRequest {
 
     @NotBlank
-    @Email                        // ← validate email format
-    private String email;         // ← was username
+    @Email
+    private String email;
 
     @NotBlank
     private String password;

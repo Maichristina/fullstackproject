@@ -24,7 +24,7 @@ public class Job {
     private String title;
 
     @NotBlank(message = "Job description is required")
-    @Column(columnDefinition = "TEXT") // it can store very long text
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     private String location;
@@ -34,12 +34,12 @@ public class Job {
     @Column(nullable = false)
     private LocalDateTime postedDate = LocalDateTime.now();
 
-    // many appliactions 1 user
-    @ManyToOne(fetch = FetchType.EAGER) // dont load user data unless i tell you
-    @JoinColumn(name = "posted_by_id", nullable = false) //creates a column posted_by_id in the jobs table — this is the foreign key pointing to users.id
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "posted_by_id", nullable = false)
     private User postedBy;
 
-    //1 application ,many users
+
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
     private List<Application> applications;
 }

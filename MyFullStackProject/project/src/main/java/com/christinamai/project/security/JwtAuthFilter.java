@@ -16,7 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
-//JwtAuthFilter uses JwtUtils
+
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
@@ -25,7 +25,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtils jwtUtils;
 
-    @Override   //This runs on EVERY single request
+    @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
@@ -33,7 +33,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         logger.debug("Filter running for: {} {}", request.getMethod(), request.getRequestURI());
 
         try {
-            String token = extractToken(request);  //grab the token from the request header
+            String token = extractToken(request);
 
             if (token != null) {
                 logger.debug("JWT token found, validating...");
@@ -70,10 +70,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private String extractToken(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
-        if (header != null && header.startsWith("Bearer ")) {  //Token MUST start with "Bearer
+        if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7).trim();
-            // Make sure it looks like a JWT (has 2 dots)
-            if (token.chars().filter(c -> c == '.').count() == 2) {  //A real JWT always has exactly 2 dots
+
+            if (token.chars().filter(c -> c == '.').count() == 2) {
                 return token;
             }
         }

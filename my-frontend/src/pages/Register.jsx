@@ -12,7 +12,7 @@ function Register() {
   const handleRegister = async () => {
     setError("")
 
-    // Frontend validation BEFORE sending to Spring Boot
+    
     if (username.length < 3) {
       setError("Username must be at least 3 characters!")
       return
@@ -26,7 +26,7 @@ function Register() {
       const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password })  // ← fixed!
+      body: JSON.stringify({ username, email, password }) 
       })
 
       if (!res.ok) {
@@ -39,13 +39,13 @@ function Register() {
       navigate("/login")
 
       const data = await res.json()
-      // Save token — user is logged in immediately after register!
+   
       localStorage.setItem("token",    data.token)
       localStorage.setItem("username", data.username)
       localStorage.setItem("role",     data.role)
-      navigate("/jobs")     // ← go to jobs, not login (already logged in!)
+      navigate("/jobs")     
 
-    } catch (_err) {        // ← underscore fixes ESLint warning
+    } catch (_err) {        
       setError("Could not connect to server!")
     }
   }
@@ -57,13 +57,13 @@ function Register() {
         {error && <p className="error">{error}</p>}
 
         <input
-          placeholder="Username"       // ← was Full Name
+          placeholder="Username"      
           value={username}
           onChange={e => setUsername(e.target.value)}
         />
         <input
           placeholder="Email"
-          type="email"                 // ← added type email
+          type="email"                
           value={email}
           onChange={e => setEmail(e.target.value)}
         />

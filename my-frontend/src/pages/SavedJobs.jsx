@@ -12,20 +12,20 @@ function SavedJobs() {
   const navigate = useNavigate()
   const { token } = useAuth()
 
-  // Load saved jobs from localStorage when page opens
+ 
   useEffect(() => {
     const data = localStorage.getItem("savedJobs")
     if (data) setSavedJobs(JSON.parse(data))
   }, [])
 
-  // Remove job from saved list
+ 
   const handleRemove = (jobId) => {
     const updated = savedJobs.filter(j => j.id !== jobId)
     setSavedJobs(updated)
     localStorage.setItem("savedJobs", JSON.stringify(updated))
   }
 
-  // Apply directly from saved jobs
+  
   const handleApply = async (jobId) => {
     setApplying(jobId)
     setError("")
@@ -45,7 +45,7 @@ function SavedJobs() {
       return
     }
 
-      // Remove from saved after applying
+    
     handleRemove(jobId)
     setSuccess("Applied successfully! ✓")
     setTimeout(() => setSuccess(""), 3000)
@@ -96,7 +96,7 @@ function SavedJobs() {
             {savedJobs.map(job => (
               <div className="job-card-glass" key={job.id}>
 
-                {/* Remove from saved button */}
+             
                 <button
                   className="save-job-btn"
                   onClick={() => handleRemove(job.id)}
@@ -106,7 +106,7 @@ function SavedJobs() {
 
                 <div className="card-header">
                   <span className="badge-location">
-                    📍 {job.location || "Remote"}
+                     {job.location || "Remote"}
                   </span>
                   <h3>{job.title}</h3>
                 </div>
@@ -126,7 +126,7 @@ function SavedJobs() {
                   </div>
 
                   <div style={{ display: "flex", gap: "0.5rem" }}>
-                    {/* Remove button */}
+                   
                     <button
                       onClick={() => handleRemove(job.id)}
                       style={{
@@ -144,7 +144,7 @@ function SavedJobs() {
                       <FaTrash size={12} /> Remove
                     </button>
 
-                    {/* Apply button */}
+              
                     <button
                       className="apply-btn-modern"
                       onClick={() => handleApply(job.id)}

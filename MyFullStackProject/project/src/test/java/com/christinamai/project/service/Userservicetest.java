@@ -47,9 +47,6 @@ class UserServiceTest {
         adminUser.setRole(User.Role.ROLE_ADMIN);
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 1: Get all users
-    // ─────────────────────────────────────────────
     @Test
     void getAllUsers_ReturnsList() {
         when(userRepository.findAll()).thenReturn(List.of(testUser, adminUser));
@@ -60,9 +57,6 @@ class UserServiceTest {
         assertEquals(2, result.size());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 2: Get user by ID — found
-    // ─────────────────────────────────────────────
     @Test
     void getUserById_Success() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
@@ -73,9 +67,7 @@ class UserServiceTest {
         assertEquals("john", result.getUsername());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 3: Get user by ID — not found
-    // ─────────────────────────────────────────────
+
     @Test
     void getUserById_NotFound_ThrowsException() {
         when(userRepository.findById(99L)).thenReturn(Optional.empty());
@@ -86,9 +78,6 @@ class UserServiceTest {
         assertEquals("User not found", ex.getMessage());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 4: Delete user successfully
-    // ─────────────────────────────────────────────
     @Test
     void deleteUser_Success() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
@@ -98,9 +87,7 @@ class UserServiceTest {
         verify(userRepository, times(1)).delete(testUser);
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 5: Delete user — not found
-    // ─────────────────────────────────────────────
+
     @Test
     void deleteUser_NotFound_ThrowsException() {
         when(userRepository.findById(99L)).thenReturn(Optional.empty());
@@ -112,9 +99,7 @@ class UserServiceTest {
         verify(userRepository, never()).delete(any());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 6: Promote user to admin
-    // ─────────────────────────────────────────────
+
     @Test
     void promoteToAdmin_Success() {
         User promotedUser = new User();
@@ -122,8 +107,7 @@ class UserServiceTest {
         promotedUser.setUsername("john");
         promotedUser.setEmail("john@test.com");
         promotedUser.setPassword("encoded");
-        promotedUser.setRole(User.Role.ROLE_ADMIN); // ← promoted!
-
+        promotedUser.setRole(User.Role.ROLE_ADMIN);
         when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
         when(userRepository.save(any(User.class))).thenReturn(promotedUser);
 
@@ -134,9 +118,7 @@ class UserServiceTest {
         verify(userRepository, times(1)).save(any());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 7: Get my profile
-    // ─────────────────────────────────────────────
+
     @Test
     void getMyProfile_Success() {
         when(userRepository.findByUsername("john"))
@@ -149,13 +131,11 @@ class UserServiceTest {
         assertEquals("john@test.com",  result.getEmail());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 8: Update profile — username taken by someone else
-    // ─────────────────────────────────────────────
+
     @Test
     void updateMyProfile_UsernameTaken_ThrowsException() {
         RegisterRequest request = new RegisterRequest();
-        request.setUsername("maria"); // ← different username
+        request.setUsername("maria");
         request.setEmail("john@test.com");
         request.setPassword("");
 
@@ -171,15 +151,13 @@ class UserServiceTest {
         verify(userRepository, never()).save(any());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 9: Update profile — password updated
-    // ─────────────────────────────────────────────
+
     @Test
     void updateMyProfile_WithNewPassword_EncodesPassword() {
         RegisterRequest request = new RegisterRequest();
         request.setUsername("john");
         request.setEmail("john@test.com");
-        request.setPassword("newpassword123"); // ← new password
+        request.setPassword("newpassword123");
 
         User updatedUser = new User();
         updatedUser.setId(1L);
@@ -198,7 +176,7 @@ class UserServiceTest {
 
         User result = userService.updateMyProfile("john", request);
 
-        // Password should have been encoded
+
         verify(passwordEncoder, times(1)).encode("newpassword123");
         assertNotNull(result);
     }

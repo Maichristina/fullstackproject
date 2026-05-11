@@ -13,8 +13,8 @@ services:
 
   backend:
     build:
-      context: ./project       # ← folder with pom.xml
-      dockerfile: Dockerfile      # ← must be INSIDE build!
+      context: ./project
+      dockerfile: Dockerfile
     container_name: spring_backend
     ports:
       - "8080:8080"
@@ -29,8 +29,8 @@ services:
 
   frontend:
      build:
-       context: ../my-frontend   # ← folder with package.json
-       dockerfile: Dockerfile      # ← must be INSIDE build!
+       context: ../my-frontend
+       dockerfile: Dockerfile
      container_name: react_frontend
      ports:
        - "5173:5173"

@@ -12,7 +12,7 @@ public class ApplicationRequest {
     @NotNull(message = "Job ID is required")
     private Long jobId;
 
-    // ← NEW FIELDS
+
     @NotBlank(message = "First name is required")
     private String firstName;
 

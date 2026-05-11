@@ -19,7 +19,7 @@ public class ApplicationResponse {
     private Application.Status status;
     private LocalDateTime appliedDate;
 
-    // ← NEW FIELDS
+
     private String firstName;
     private String lastName;
     private String birthDate;

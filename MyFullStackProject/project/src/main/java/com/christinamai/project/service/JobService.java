@@ -1,4 +1,4 @@
-//διαχειρίζεται όλη τη λογική γύρω από τις αγγελίες εργασίας.δημιουργία και η τροποποίηση των θέσεων εργασίας
+
 package com.christinamai.project.service;
 
 import com.christinamai.project.dto.JobRequest;
@@ -26,7 +26,7 @@ public class JobService {
     @Autowired
     private UserRepository userRepository;
 
-    // ADMIN — create a new job
+
     public JobResponse createJob(JobRequest request, String email) {
         User admin = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -44,22 +44,22 @@ public class JobService {
         return mapToResponse(saved);
     }
 
-    // EVERYONE — get all jobs
+
     public List<JobResponse> getAllJobs() {
         return jobRepository.findAll()
                 .stream()
-                .map(this::mapToResponse) //ο :: είναι ένας σύντομος τρόπος να πεις: "Για κάθε στοιχείο που περνάει από το stream, κάλεσε τη μέθοδο mapToResponse της τρέχουσας κλάσης
+                .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
 
-    // EVERYONE — get one job by id
+
     public JobResponse getJobById(Long id) {
         Job job = jobRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
         return mapToResponse(job);
     }
 
-    // ADMIN — update a job
+
     public JobResponse updateJob(Long id, JobRequest request, String username) {
         Job job = jobRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
@@ -75,7 +75,7 @@ public class JobService {
         return mapToResponse(updated);
     }
 
-    // ADMIN — delete a job
+
     public void deleteJob(Long id, String username) {
         Job job = jobRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
@@ -84,7 +84,7 @@ public class JobService {
         logger.info("Job deleted: id={} by {}", id, username);
     }
 
-    // ADMIN — get jobs posted by a specific admin
+
     public List<JobResponse> getJobsByAdmin(String email) {
         User admin = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -95,7 +95,7 @@ public class JobService {
                 .collect(Collectors.toList());
     }
 
-    // Converts Job entity → JobResponse DTO
+
     private JobResponse mapToResponse(Job job) {
         return new JobResponse(
                 job.getId(),

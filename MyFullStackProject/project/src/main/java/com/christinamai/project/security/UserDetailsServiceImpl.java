@@ -1,11 +1,4 @@
-//Δεν την καλείς εσύ χειροκίνητα! Την καλεί το Spring Security αυτόματα κατά τη διαδικασία του Login
-// ή όταν το JwtAuthFilter (που είδαμε πριν) προσπαθεί να επιβεβαιώσει τα στοιχεία ενός χρήστη
 
-//Spring Security doesn't know about YOUR User entity!
-//Spring Security speaks its own language → UserDetails
-//YOUR app speaks your language → User entity
-//
-//UserDetailsServiceImpl is the TRANSLATOR between them
 package com.christinamai.project.security;
 
 import com.christinamai.project.entity.User;
@@ -22,13 +15,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 
-//interface:Spring Security doesn't know HOW you store users
+
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    //Ο Logger καταγράφει γεγονότα την ώρα που τρέχει το πρόγραμμα. Είναι ο μόνος τρόπος να ξέρεις τι πήγε στραβά σε έναν server που τρέχει 24/7 χωρίς εσένα από πάνω
+
     private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
-    @Autowired  //Needs UserRepository to search the databas
+    @Autowired
     private UserRepository userRepository;
 
 

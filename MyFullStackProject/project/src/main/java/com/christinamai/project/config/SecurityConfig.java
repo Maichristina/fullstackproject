@@ -77,7 +77,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // ← CORS as a separate Bean — cleaner and more reliable
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
@@ -89,7 +89,7 @@ public class SecurityConfig {
         config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);  // ← applies to ALL endpoints
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 

@@ -48,7 +48,7 @@ function MyProfile() {
     e.preventDefault()
     setSaving(true)
 
-    // Save to localStorage (no backend needed for profile)
+   
     localStorage.setItem("userProfile", JSON.stringify(profile))
 
     setTimeout(() => {
@@ -103,7 +103,7 @@ function MyProfile() {
 
         <form onSubmit={handleSave}>
 
-          {/* ── CV UPLOAD ──────────────────────── */}
+          
           <div className="profile-section">
             <h3 className="profile-section-title">
               <FaFileUpload color="#4a90e2" /> CV / Resume
@@ -138,7 +138,6 @@ function MyProfile() {
             </div>
           </div>
 
-          {/* ── PERSONAL INFO ───────────────────── */}
           <div className="profile-section">
             <h3 className="profile-section-title">
               <FaUser color="#4a90e2" /> Personal Information
@@ -174,7 +173,6 @@ function MyProfile() {
            
           </div>
 
-          {/* ── EDUCATION ───────────────────────── */}
           <div className="profile-section">
             <h3 className="profile-section-title">
               <FaGraduationCap color="#4a90e2" /> Education
@@ -188,7 +186,7 @@ function MyProfile() {
             </div>
           </div>
 
-          {/* ── LANGUAGES ───────────────────────── */}
+       
           <div className="profile-section">
             <h3 className="profile-section-title">
               <FaLanguage color="#4a90e2" /> Languages
@@ -203,7 +201,7 @@ function MyProfile() {
             </div>
           </div>
 
-          {/* ── SKILLS ──────────────────────────── */}
+        
           <div className="profile-section">
             <h3 className="profile-section-title">
               <FaTools color="#4a90e2" /> Skills
@@ -222,7 +220,7 @@ function MyProfile() {
             </div>
           </div>
 
-          {/* ── EXPERIENCE ──────────────────────── */}
+        
           <div className="profile-section">
             <h3 className="profile-section-title">
               <FaBriefcase color="#4a90e2" /> Work Experience
@@ -237,7 +235,7 @@ function MyProfile() {
             </div>
           </div>
 
-          {/* ── SAVE BUTTON ─────────────────────── */}
+        
           <div style={{ display: "flex", justifyContent: "flex-end",
                         gap: "1rem", marginTop: "1rem" }}>
             <button type="button" className="btn-ghost"

@@ -44,7 +44,7 @@ function Jobs() {
 
       {jobs.length === 0 ? (
         <div className="no-data-view">
-          <p>📋 No jobs available right now.</p>
+          <p> No jobs available right now.</p>
           {role === "ROLE_ADMIN" && (
             <button className="create-btn" onClick={() => navigate("/admin/jobs")}>
               <FaPlus /> Create First Job

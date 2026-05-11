@@ -1,4 +1,4 @@
-//Without Security Anyone can do ANYTHING:
+
 package com.christinamai.project.security;
 
 import io.jsonwebtoken.*;
@@ -11,26 +11,26 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-//οταν ο χρηστης κανει λογκ ιν και ειναι σωστα τα στοιχεια,φτιαχνει ενα τοκεν με ονομα χρηστη ρολο κλπ
-@Component //@Component means Spring manages this class. Any other class can use it by just saying @Autowired.
+
+@Component
 public class JwtUtils {
-    //final->dont change,Logger->type,logger->varname,loggerfactory->create loggers,.get->jwtutils
+
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("${app.jwt.secret}") //reads from application.properties file
+    @Value("${app.jwt.secret}")
     private String jwtSecret;
 
     @Value("${app.jwt.expiration}")
     private long jwtExpiration;
 
     public String generateToken(String username, String role) {
-        return Jwts.builder()  //builder->Easier to make objects
+        return Jwts.builder()
                 .subject(username)
                 .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSigningKey())
-                .compact(); //finish and build token
+                .compact();
     }
 
     public String getUsernameFromToken(String token) {
@@ -38,7 +38,7 @@ public class JwtUtils {
     }
 
     public String getRoleFromToken(String token) {
-        return parseClaims(token).get("role", String.class); //get the value of role and expect to be string.stringclass->reurn as string role admin
+        return parseClaims(token).get("role", String.class);
     }
 
     public boolean validateToken(String token) {
@@ -60,15 +60,15 @@ public class JwtUtils {
     }
 
     private Claims parseClaims(String token) {
-        return Jwts.parser() //read a token
-                .verifyWith(getSigningKey()) // use secret key to verify
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
                 .build()
-                .parseSignedClaims(token) //open the token
-                .getPayload(); // get the data inside
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     private SecretKey getSigningKey() {
         byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
-        return Keys.hmacShaKeyFor(keyBytes); // cryptographic algorithm
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }

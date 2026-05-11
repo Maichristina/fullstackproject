@@ -9,18 +9,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import com.christinamai.project.entity.Application; // Βεβαιώσου ότι το path είναι σωστό
 import java.security.Principal;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.List;
 
 
 
-@RestController //κλάση θα δέχεται HTTP αιτήματα και θα επιστρέφει δεδομένα (συνήθως JSON
-@RequestMapping("/api/applications") //τα αιτήματα σε αυτόν τον Controller θα ξεκινούν με αυτό το πρόθεμα
-@CrossOrigin(origins = "*") //Επιτρέπει σε frontend εφαρμογές να "μιλάνε" με αυτό το API
+
+@RestController
+@RequestMapping("/api/applications")
+@CrossOrigin(origins = "*")
 public class ApplicationController {
 
 
@@ -36,9 +35,9 @@ public class ApplicationController {
     @Autowired
     private ApplicationService applicationService;
 
-    // POST /api/applications — user applies to a job
-    @PostMapping //Χρησιμοποιείται για δημιουργία νέας εγγραφής.
-    @PreAuthorize("hasAuthority('ROLE_USER')") //το Spring Security ελέγχει αν ο χρήστης που έστειλε το JWT έχει όντως ρόλο USER
+
+    @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<ApplicationResponse> applyToJob(
             @Valid @RequestBody ApplicationRequest request,
             Authentication authentication) {
@@ -48,7 +47,7 @@ public class ApplicationController {
 
 
 
-    // DELETE /api/applications/{id} — user deletes their own application
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<String> deleteMyApplication(
@@ -58,7 +57,7 @@ public class ApplicationController {
         return ResponseEntity.ok("Application deleted successfully");
     }
 
-    // GET /api/applications — admin sees all applications
+
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<ApplicationResponse>> getAllApplications() {
@@ -71,7 +70,7 @@ public class ApplicationController {
         return ResponseEntity.ok(myApps);
     }
 
-    // GET /api/applications/job/{jobId} — admin sees applications for a job
+
     @GetMapping("/job/{jobId}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<ApplicationResponse>> getApplicationsByJob(
@@ -79,7 +78,7 @@ public class ApplicationController {
         return ResponseEntity.ok(applicationService.getApplicationsByJob(jobId));
     }
 
-    // PUT /api/applications/{id}/status — admin updates status
+
     @PutMapping("/{id}/status")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ApplicationResponse> updateStatus(

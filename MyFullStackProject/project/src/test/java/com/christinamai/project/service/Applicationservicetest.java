@@ -75,9 +75,7 @@ class ApplicationServiceTest {
         applicationRequest.setJobId(1L);
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 1: Apply to job successfully
-    // ─────────────────────────────────────────────
+
     @Test
     void applyToJob_Success() {
         when(userRepository.findByEmail("john@test.com"))
@@ -99,9 +97,7 @@ class ApplicationServiceTest {
         verify(applicationRepository, times(1)).save(any(Application.class));
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 2: Apply twice — already applied
-    // ─────────────────────────────────────────────
+
     @Test
     void applyToJob_AlreadyApplied_ThrowsException() {
         when(userRepository.findByEmail("john@test.com"))
@@ -118,9 +114,7 @@ class ApplicationServiceTest {
         verify(applicationRepository, never()).save(any());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 3: Apply — job not found
-    // ─────────────────────────────────────────────
+
     @Test
     void applyToJob_JobNotFound_ThrowsException() {
         when(userRepository.findByEmail("john@test.com"))
@@ -134,9 +128,7 @@ class ApplicationServiceTest {
         assertEquals("Job not found", ex.getMessage());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 4: Apply — user not found
-    // ─────────────────────────────────────────────
+
     @Test
     void applyToJob_UserNotFound_ThrowsException() {
         when(userRepository.findByEmail("unknown@test.com"))
@@ -148,10 +140,7 @@ class ApplicationServiceTest {
         assertEquals("User not found", ex.getMessage());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 5: Get my applications — returns list
-    // ✅ FIXED: findByUser(user) — matches ApplicationService.java
-    // ─────────────────────────────────────────────
+
     @Test
     void getMyApplications_ReturnsUserApplications() {
         when(userRepository.findByEmail("john@test.com"))
@@ -168,10 +157,7 @@ class ApplicationServiceTest {
         assertEquals("john",           result.get(0).getApplicantUsername());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 6: Get my applications — empty
-    // ✅ FIXED: findByUser(user) — matches ApplicationService.java
-    // ─────────────────────────────────────────────
+
     @Test
     void getMyApplications_Empty() {
         when(userRepository.findByEmail("john@test.com"))
@@ -186,9 +172,7 @@ class ApplicationServiceTest {
         assertEquals(0, result.size());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 7: Delete my application successfully
-    // ─────────────────────────────────────────────
+
     @Test
     void deleteMyApplication_Success() {
         when(applicationRepository.findById(1L))
@@ -199,9 +183,7 @@ class ApplicationServiceTest {
         verify(applicationRepository, times(1)).delete(testApplication);
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 8: Delete someone else's application — denied
-    // ─────────────────────────────────────────────
+
     @Test
     void deleteMyApplication_NotOwner_ThrowsException() {
         when(applicationRepository.findById(1L))
@@ -215,9 +197,7 @@ class ApplicationServiceTest {
         verify(applicationRepository, never()).delete(any());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 9: Delete — application not found
-    // ─────────────────────────────────────────────
+
     @Test
     void deleteMyApplication_NotFound_ThrowsException() {
         when(applicationRepository.findById(99L))
@@ -230,9 +210,7 @@ class ApplicationServiceTest {
         verify(applicationRepository, never()).delete(any());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 10: Admin — get all applications
-    // ─────────────────────────────────────────────
+
     @Test
     void getAllApplications_ReturnsAll() {
         Application app2 = new Application();
@@ -252,9 +230,7 @@ class ApplicationServiceTest {
         assertEquals(2, result.size());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 11: Admin — update status to ACCEPTED
-    // ─────────────────────────────────────────────
+
     @Test
     void updateStatus_ToAccepted_Success() {
         Application acceptedApp = new Application();
@@ -277,9 +253,7 @@ class ApplicationServiceTest {
         verify(applicationRepository, times(1)).save(any());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 12: Admin — update status to REJECTED
-    // ─────────────────────────────────────────────
+
     @Test
     void updateStatus_ToRejected_Success() {
         Application rejectedApp = new Application();
@@ -300,15 +274,13 @@ class ApplicationServiceTest {
         assertEquals(Application.Status.REJECTED, result.getStatus());
     }
 
-    // ─────────────────────────────────────────────
-    // TEST 13: Admin — invalid status throws exception
-    // ─────────────────────────────────────────────
+
     @Test
     void updateStatus_InvalidStatus_ThrowsException() {
         when(applicationRepository.findById(1L))
                 .thenReturn(Optional.of(testApplication));
 
-        // "BANANA" is not PENDING/ACCEPTED/REJECTED → throws!
+
         assertThrows(IllegalArgumentException.class,
                 () -> applicationService.updateStatus(1L, "BANANA", "admin@test.com"));
     }

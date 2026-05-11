@@ -19,9 +19,9 @@ function Navbar() {
 
   const handlePersonClick = () => {
     if (!token) {
-      navigate("/login")  // not logged in → go to login
+      navigate("/login")  
     }
-    // if logged in → do nothing (already inside the app)
+   
   }
 
   const menuItems = role === "ROLE_ADMIN"
@@ -40,12 +40,12 @@ function Navbar() {
   return (
     <header className="main-header">
 
-      {/* Logo */}
+  
       <div className="logo" onClick={() => navigate("/")}>
         Career<span>Stream</span>
       </div>
 
-      {/* Menu */}
+   
       <div className="menu-section">
         <button
           className="menu-dropdown-btn"
@@ -70,13 +70,13 @@ function Navbar() {
         )}
       </div>
 
-      {/* Right side */}
+     
       <div className="header-right">
         <span className="role-badge">
           {role === "ROLE_ADMIN" ? "Admin" : "User"}
         </span>
 
-        {/* Person icon — click to login if not logged in */}
+     
         <FaUserCircle
           size={26}
           color="#4a90e2"
@@ -85,7 +85,6 @@ function Navbar() {
           title={token ? "Logged in" : "Click to login"}
         />
 
-        {/* Logout — only show if logged in */}
         {token && (
           <button className="icon-btn" onClick={handleLogout} title="Logout">
             <FaSignOutAlt size={20} />

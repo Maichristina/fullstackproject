@@ -15,7 +15,7 @@ function MyApplications() {
 
   const fetchMyApplications = async () => {
     try {
-      // ✅ CORRECT URL: /api/applications/my
+     
       const res = await fetch("/api/applications/my", {
         headers: { "Authorization": `Bearer ${token}` }
       })
@@ -45,7 +45,7 @@ function MyApplications() {
     }
   }
 
-  // Status badge using correct CSS classes
+  
   const statusBadge = (status) => {
     const map = {
       PENDING:  "status-pending",
@@ -62,10 +62,10 @@ function MyApplications() {
   return (
     <div className="app-wrapper">
 
-      {/* Header */}
+     
       <main className="main-content">
         <div className="back-navigation">
-          {/* Αν θέλεις το "Back to Jobs", μπορείς να το βάλεις εδώ σαν απλό link/button */}
+         
           <button
             className="menu-dropdown-btn"
             onClick={() => navigate("/jobs")}
@@ -116,7 +116,7 @@ function MyApplications() {
                     </td>
 
                     <td>
-                      {/* Only PENDING can be withdrawn */}
+                     
                       {app.status === "PENDING" && (
                         <button className="btn btn-danger btn-sm"
                           onClick={() => handleDelete(app.id)}>

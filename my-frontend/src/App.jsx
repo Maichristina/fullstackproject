@@ -15,7 +15,7 @@ import PropTypes from "prop-types";
 
 
 
-// Προστατευμένο Route για Admins
+
 function AdminRoute({ children }) {
   const { token, role } = useAuth()
   if (!token) return <Navigate to="/login" />
@@ -31,11 +31,11 @@ AdminRoute.propTypes = {
 function App() {
   return (
     <BrowserRouter>
-      {/* Το Navbar μένει ΕΞΩ από τα Routes για να φαίνεται ΠΑΝΤΑ */}
+  
       <div className="app-wrapper"> 
         <Navbar />
         <Routes>
-          {/* Η αρχική σελίδα πλέον δείχνει το Home component */}
+        
           <Route path="/" element={<Home />} />
           <Route path="/admin/jobs" element={<AdminRoute><AdminJobs /></AdminRoute>} />
           <Route path="/admin/applications" element={<AdminRoute><AdminApplications /></AdminRoute>} />
@@ -47,7 +47,7 @@ function App() {
           <Route path="/apply/:jobId" element={<ApplicationForm />} />
           <Route path="/my-applications" element={<MyApplications />} />
           
-          {/* Fallback: Αν κάποιος γράψει λάθος URL, στείλε τον στο Home */}
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

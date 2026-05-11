@@ -1,8 +1,6 @@
--- ============================================
--- Job Search Application — Database Schema
--- ============================================
 
--- 1. Users table
+
+
 CREATE TABLE IF NOT EXISTS users (
                                      id       BIGSERIAL    PRIMARY KEY,
                                      username VARCHAR(50)  NOT NULL UNIQUE,
@@ -11,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     role     VARCHAR(20)  NOT NULL
     );
 
--- 2. Jobs table
+
 CREATE TABLE IF NOT EXISTS jobs (
                                     id           BIGSERIAL    PRIMARY KEY,
                                     title        VARCHAR(255) NOT NULL,
@@ -23,7 +21,7 @@ CREATE TABLE IF NOT EXISTS jobs (
     CONSTRAINT fk_posted_by FOREIGN KEY (posted_by_id) REFERENCES users(id) ON DELETE CASCADE
     );
 
--- 3. Applications table
+
 CREATE TABLE IF NOT EXISTS applications (
                                             id           BIGSERIAL   PRIMARY KEY,
                                             job_id       BIGINT      NOT NULL,

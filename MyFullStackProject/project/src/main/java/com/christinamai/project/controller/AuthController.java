@@ -1,12 +1,4 @@
-//Ο χρήστης στέλνει username/password στον AuthController.
-//
-//Ο Controller τα δίνει στον AuthService.
-//
-//Ο Service ελέγχει τη βάση και "χτυπάει" το password με το BCrypt.
-//
-//Αν όλα είναι οκ, ο JwtUtils φτιάχνει ένα Token.
-//
-//Ο Controller επιστρέφει το Token στον χρήστη με κωδικό 200 OK.
+
 package com.christinamai.project.controller;
 
 import com.christinamai.project.dto.AuthResponse;
@@ -16,7 +8,6 @@ import com.christinamai.project.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -39,7 +30,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
-    // TEMPORARY TEST ENDPOINT — no security needed
+
     @GetMapping("/test")
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("Controller is working!");

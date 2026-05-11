@@ -22,18 +22,17 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // ADMIN — get all users
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // ADMIN — get one user by id
+
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    // ADMIN — delete any user
     public void deleteUser(Long id, String adminUsername) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -42,7 +41,7 @@ public class UserService {
         logger.info("Admin {} deleted user {}", adminUsername, user.getUsername());
     }
 
-    // ADMIN — promote user to admin
+
     public User promoteToAdmin(Long id, String adminUsername) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -55,25 +54,24 @@ public class UserService {
         return updated;
     }
 
-    // USER — get their own profile
     public User getMyProfile(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    // USER — update their own profile
+
     public User updateMyProfile(String email, RegisterRequest request) {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Check if new username is taken by someone else
+
         if (!user.getUsername().equals(request.getUsername()) &&
                 userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("Username already taken");
         }
 
-        // Check if new email is taken by someone else
+
         if (!user.getEmail().equals(request.getEmail()) &&
                 userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already registered");
@@ -82,7 +80,7 @@ public class UserService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
 
-        // Only update password if a new one was provided
+
         if (request.getPassword() != null && !request.getPassword().isBlank()) {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
         }

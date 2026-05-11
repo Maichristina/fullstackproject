@@ -17,7 +17,7 @@ function ApplicationForm() {
     experience: [""]
   });
 
-  // Διαχείριση Δυναμικών Πεδίων
+
   const handleAdd = (field) => {
     setFormData({ ...formData, [field]: [...formData[field], ""] });
   };
@@ -42,10 +42,10 @@ const handleSubmit = async (e) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`   // ← send JWT
+        "Authorization": `Bearer ${token}`   
       },
       body: JSON.stringify({
-        jobId:      parseInt(jobId),          // ← from useParams
+        jobId:      parseInt(jobId),          
         firstName:  formData.firstName,
         lastName:   formData.lastName,
         birthDate:  formData.birthDate,
@@ -84,7 +84,7 @@ const handleSubmit = async (e) => {
             <input type="date" required 
               onChange={e => setFormData({...formData, birthDate: e.target.value})} />
 
-            {/* EDUCATION SECTION */}
+           
             <div className="dynamic-section" style={{width: '80%', margin: '1rem 0'}}>
               <h4>Education</h4>
               {formData.education.map((edu, idx) => (
@@ -99,7 +99,7 @@ const handleSubmit = async (e) => {
               <button type="button" className="menu-dropdown-btn" onClick={() => handleAdd("education")}><FaPlus /> Add More</button>
             </div>
 
-            {/* EXPERIENCE SECTION */}
+          
             <div className="dynamic-section" style={{width: '80%', margin: '1rem 0'}}>
               <h4>Experience</h4>
               {formData.experience.map((exp, idx) => (

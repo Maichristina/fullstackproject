@@ -7,7 +7,7 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Search EVERYWHERE for jar files
+
 RUN find / -name "*.jar" -type f 2>/dev/null | grep -v repository
 
 FROM eclipse-temurin:21-jre

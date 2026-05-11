@@ -30,7 +30,7 @@ function AdminJobs() {
     e.preventDefault();
     setError("")
 
-    // Frontend validation
+   
     if (!newJob.title.trim()) {
       setError("Title is required!"); return
     }
@@ -42,7 +42,7 @@ function AdminJobs() {
         method: "POST",  
         headers: { 
         "Content-Type": "application/json", 
-        "Authorization": `Bearer ${token}` // <--- Εδώ είναι το κλειδί
+        "Authorization": `Bearer ${token}` 
         },
             
         body: JSON.stringify({
@@ -59,7 +59,7 @@ function AdminJobs() {
         return
       }
 
-      // Reset form and reload jobs
+  
       setNewJob({ title: "", description: "", location: "", salary: "" })
       setMsg("Job created successfully!")
       setTimeout(() => setMsg(""), 3000)
@@ -96,7 +96,7 @@ function AdminJobs() {
     <main className="main-content">
       <h2>Διαχείριση Αγγελιών</h2>
       
-      {/* Φόρμα Προσθήκης */}
+    
       <form className="admin-form" onSubmit={handleCreate}>
         <input type="text" placeholder="Τίτλος" value={newJob.title} onChange={e => setNewJob({...newJob, title: e.target.value})} required />
         <input type="text" placeholder="Τοποθεσία" value={newJob.location} onChange={e => setNewJob({...newJob, location: e.target.value})} />
@@ -105,7 +105,7 @@ function AdminJobs() {
         <button type="submit" className="create-btn"><FaTrash /> Προσθήκη</button>
       </form>
 
-      {/* Λίστα για Διαγραφή */}
+    
       <div className="admin-list">
         {jobs.map(job => (
           <div key={job.id} className="admin-item">

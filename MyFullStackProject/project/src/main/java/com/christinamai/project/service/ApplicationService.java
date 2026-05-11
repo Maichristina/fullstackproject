@@ -1,4 +1,4 @@
-//Service     → does ALL the thinking/logiService
+
 package com.christinamai.project.service;
 
 import com.christinamai.project.dto.ApplicationRequest;
@@ -23,32 +23,30 @@ public class ApplicationService {
     private static final Logger logger = LoggerFactory.getLogger(ApplicationService.class);
 
     @Autowired
-    private ApplicationRepository applicationRepository; //save/find/delete applications
+    private ApplicationRepository applicationRepository;
 
     @Autowired
-    private JobRepository jobRepository; //find the job being applied to
+    private JobRepository jobRepository;
 
     @Autowired
-    private UserRepository userRepository; //find the user who is applying
+    private UserRepository userRepository;
 
-    // USER — apply to a job
     public ApplicationResponse applyToJob(ApplicationRequest request, String username) {
-        //Find the User in DB by username not found? → throw exception → 404 error
+
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Job job = jobRepository.findById(request.getJobId())
                 .orElseThrow(() -> new RuntimeException("Job not found"));
 
-        // Check if user already applied to this job
         if (applicationRepository.existsByJobAndUser(job, user)) {
             throw new RuntimeException("You have already applied to this job");
         }
 
-        Application application = new Application(); // empty object
-        application.setJob(job); // connect to the job
-        application.setUser(user); // connect to the user
-        application.setStatus(Application.Status.PENDING); //starts as PENDING always
+        Application application = new Application();
+        application.setJob(job);
+        application.setUser(user);
+        application.setStatus(Application.Status.PENDING);
         application.setFirstName(request.getFirstName());
         application.setLastName(request.getLastName());
         application.setBirthDate(request.getBirthDate());
@@ -58,10 +56,10 @@ public class ApplicationService {
         Application saved = applicationRepository.save(application);
         logger.info("User {} applied to job {}", username, job.getTitle());
 
-        return mapToResponse(saved); //Μετατρέπει την οντότητα σε Response DTO για να τη δει ο χρήστης
+        return mapToResponse(saved);
     }
 
-    // USER — get their own applications
+
     public List<ApplicationResponse> getMyApplications(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -72,13 +70,12 @@ public class ApplicationService {
                 .collect(Collectors.toList());
     }
 
-    // USER — delete their own application.Πριν διαγράψει, ελέγχει αν το username της αίτησης ταιριάζει με το username αυτού που ζητάει τη διαγραφή.
-    // Έτσι, ο Χρήστης Α δεν μπορεί να διαγράψει την αίτηση του Χρήστη Β
+
     public void deleteMyApplication(Long id, String email) {
         Application application = applicationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Application not found"));
 
-        // Make sure the application belongs to this user
+
         if (!application.getUser().getEmail().equals(email)) {
             throw new RuntimeException("You can only delete your own applications");
         }
@@ -87,7 +84,7 @@ public class ApplicationService {
         logger.info("User {} deleted application id={}", email, id);
     }
 
-    // ADMIN — get all applications
+
     public List<ApplicationResponse> getAllApplications() {
         return applicationRepository.findAll()
                 .stream()
@@ -95,7 +92,7 @@ public class ApplicationService {
                 .collect(Collectors.toList());
     }
 
-    // ADMIN — get all applications for a specific job
+
     public List<ApplicationResponse> getApplicationsByJob(Long jobId) {
         Job job = jobRepository.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
@@ -106,7 +103,7 @@ public class ApplicationService {
                 .collect(Collectors.toList());
     }
 
-    // ADMIN — update application status
+
     public ApplicationResponse updateStatus(Long id, String status, String username) {
         Application application = applicationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Application not found"));
@@ -120,11 +117,11 @@ public class ApplicationService {
     }
 
     public List<Application> getApplicationsByUsername(String username) {
-        // Τώρα το όνομα της μεθόδου ταιριάζει με την παράμετρο (String)
+
         return applicationRepository.findByUser_Email(username);
     }
 
-    // Converts Application entity → ApplicationResponse DTO
+
     private ApplicationResponse mapToResponse(Application application) {
         return new ApplicationResponse(
                 application.getId(),

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import { useAuth } from "../context/AuthContext"  // ← import
+import { useAuth } from "../context/AuthContext"  
 import Navbar from "../components/Navbar";
 
 function Login() {
@@ -8,7 +8,7 @@ function Login() {
   const [password, setPassword] = useState("")
   const [error,    setError]    = useState("")
   const navigate = useNavigate()
-  const { login } = useAuth()  // ← get login function
+  const { login } = useAuth() 
 
   const handleLogin = async () => {
     try {
@@ -33,7 +33,7 @@ function Login() {
       console.log("username:", data.username)
       console.log("full response:", data)
 
-      login(data.token, data.role, data.username)  // ← use this instead of localStorage directly
+      login(data.token, data.role, data.username) 
       if (data.role === "ROLE_ADMIN") {
         navigate("/admin")
       } else {

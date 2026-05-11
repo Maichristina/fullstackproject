@@ -18,14 +18,14 @@ public class UserProfileService {
 
     public UserProfile getProfile(String email) {
         return userProfileRepository.findByUser_Email(email)
-                .orElse(new UserProfile()); // return empty if not found
+                .orElse(new UserProfile());
     }
 
     public UserProfile saveProfile(String email, UserProfile incoming) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // update existing or create new
+
         UserProfile profile = userProfileRepository
                 .findByUser_Email(email)
                 .orElse(new UserProfile());

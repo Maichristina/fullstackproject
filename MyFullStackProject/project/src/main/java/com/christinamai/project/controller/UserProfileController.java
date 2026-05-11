@@ -15,7 +15,7 @@ public class UserProfileController {
     @Autowired
     private UserProfileService userProfileService;
 
-    // GET /api/profile — load my profile
+
     @GetMapping
     public ResponseEntity<UserProfile> getMyProfile(Authentication authentication) {
         return ResponseEntity.ok(
@@ -23,7 +23,7 @@ public class UserProfileController {
         );
     }
 
-    // PUT /api/profile — save my profile
+
     @PutMapping
     public ResponseEntity<UserProfile> saveMyProfile(
             @RequestBody UserProfile profile,

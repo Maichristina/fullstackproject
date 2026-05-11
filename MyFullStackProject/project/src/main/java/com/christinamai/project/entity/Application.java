@@ -34,7 +34,6 @@ public class Application {
     @Column(nullable = false)
     private LocalDateTime appliedDate = LocalDateTime.now();
 
-    // ← NEW FIELDS
     private String firstName;
     private String lastName;
     private String birthDate;

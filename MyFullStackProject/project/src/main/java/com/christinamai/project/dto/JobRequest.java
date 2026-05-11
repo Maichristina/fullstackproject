@@ -3,7 +3,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-// request->when a user wants send data to server.transfers data from a form to servre
+
 @Data
 public class JobRequest {
 
@@ -16,7 +16,7 @@ public class JobRequest {
     @NotBlank(message = "Location is required")
     private String location;
 
-    @NotNull(message = "Salary is required")  //not null->int  not blank->String
-    @Positive(message = "Salary must be a positive number") //greater of 0
+    @NotNull(message = "Salary is required")
+    @Positive(message = "Salary must be a positive number")
     private Double salary;
 }
